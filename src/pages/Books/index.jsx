@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import BooksList from '../../components/BooksList';
 import ApiService from '../../helpers/api-helpers';
-import { AiFillStar } from 'react-icons/ai';
+import { AiFillStar, AiOutlineLeftCircle, AiOutlineRightCircle } from 'react-icons/ai';
 import { GrClose } from 'react-icons/gr';
 import { BsFilterSquare } from 'react-icons/bs';
 const genresApi = new ApiService('books/genres');
@@ -18,6 +18,8 @@ const Books = () => {
   const [chosenRatings, setChosenRatings] = useState([]);
   const [searchText, setSearchText] = useState(null);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     genresApi
@@ -33,7 +35,9 @@ const Books = () => {
 
   useEffect(() => {
     const query = {
-      include: 'ratings,authors,genres,attachments'
+      include: 'ratings,authors,genres,attachments',
+      start: (page - 1) * 6,
+      count: 6
     };
 
     if (chosenGenres.length > 0) {
@@ -54,9 +58,10 @@ const Books = () => {
       .getAllItems(query)
       .then((res) => {
         setBooks(res.rows);
+        setCount(res.count);
       })
       .catch(() => {});
-  }, [isFiltersApplied]);
+  }, [isFiltersApplied, page]);
 
   const manageCheckbox = (e, array, setArray) => {
     const newArray = array;
@@ -76,6 +81,18 @@ const Books = () => {
 
   const onSearchChange = (e) => {
     setSearchText(e.target.value);
+  };
+
+  const onPreviousPageClick = () => {
+    if (page !== 0) {
+      setPage(page - 1);
+    }
+  };
+
+  const onNextPageClick = () => {
+    if (page !== count / 6) {
+      setPage(page + 1);
+    }
   };
 
   return (
@@ -104,7 +121,7 @@ const Books = () => {
                 className="w-full px-2 border-2 border-gray-600 rounded-lg"
               />
               <div className="py-1 font-semibold">Genres</div>
-              <ul className="px-1">
+              <ul className="px-1 max-h-[220px] overflow-y-scroll">
                 {genres &&
                   genres.map((genre) => (
                     <li key={genre.id}>
@@ -119,7 +136,7 @@ const Books = () => {
                   ))}
               </ul>
               <div className="py-1 font-semibold">Authors</div>
-              <ul className="px-1">
+              <ul className="px-1 max-h-[220px] overflow-y-scroll">
                 {authors &&
                   authors.map((author) => (
                     <li key={author.id}>
@@ -165,6 +182,11 @@ const Books = () => {
             </button>
           </div>
           <BooksList title={'All books'} books={books} />
+          <div className="flex w-full justify-center py-2">
+            <AiOutlineLeftCircle onClick={onPreviousPageClick} size={24} className="cursor-pointer" />
+            <div className="px-2 font-bold">{page}</div>
+            <AiOutlineRightCircle onClick={onNextPageClick} size={24} className="cursor-pointer" />
+          </div>
         </div>
       </div>
     </div>
