@@ -74,10 +74,6 @@ const BookPage = () => {
     setIsCollectionsModalOpen(true);
   };
 
-  const onOpenButtonClick = () => {
-    navigate(`/uploads/${book.file?.storageKey}`);
-  };
-
   useEffect(() => {
     const payload = {
       include: 'genres,authors,ratings,attachments,files'
@@ -128,16 +124,14 @@ const BookPage = () => {
             )}
             {book && book.file?.storageKey && (
               <>
-                <button
-                  onClick={onOpenButtonClick}
-                  className="flex w-[97%] mx-1 mt-2 h-4 md:h-10 items-center bg-orange-100 border-2 border-orange-300 rounded-full"
+                <a
+                  href={`/uploads/${book.file.storageKey}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-[97%] py-2 mx-1 mt-2 h-4 md:h-10 text-center items-center bg-orange-100 border-2 border-orange-300 rounded-full"
                 >
-                  <div className="font-semibold w-full text-sm sm:text-base md:text-lg">
-                    <a href={`/uploads/${book.file.storageKey}`} target="_blank" rel="noopener noreferrer">
-                      Read online
-                    </a>
-                  </div>
-                </button>
+                  <div className="font-semibold w-full text-xs md:text-lg">Read online</div>
+                </a>
                 <div className="w-full pt-1 text-center underline cursor-pointer">
                   <Link to={`/uploads/${book.file.storageKey}`} target="_blank" download>
                     Download
