@@ -116,6 +116,16 @@ const BookPage = () => {
                 <IoMdArrowDropdown size={'80%'} />
               </button>
             </div>
+            {isMenuOpen && (
+              <div className="mx-2 my-1 bg-gray-200 border border-gray-400 rounded-lg text-xs sm:text-base font-semibold drop-shadow-xl">
+                <button onClick={onAddToLikedClick} className="w-full rounded-t-lg hover:bg-gray-300">
+                  {isLiked ? 'Remove from liked' : 'Add to liked'}
+                </button>
+                <button onClick={onOpenCollectionsClick} className="w-full rounded-b-lg hover:bg-gray-300">
+                  Add to collection
+                </button>
+              </div>
+            )}
             {book && book.file?.storageKey && (
               <>
                 <button
@@ -134,16 +144,6 @@ const BookPage = () => {
                   </Link>
                 </div>
               </>
-            )}
-            {isMenuOpen && (
-              <div className="mx-2 my-1 bg-gray-200 border border-gray-400 rounded-lg text-xs sm:text-base font-semibold drop-shadow-xl">
-                <button onClick={onAddToLikedClick} className="w-full rounded-t-lg hover:bg-gray-300">
-                  {isLiked ? 'Remove from liked' : 'Add to liked'}
-                </button>
-                <button onClick={onOpenCollectionsClick} className="w-full rounded-b-lg hover:bg-gray-300">
-                  Add to collection
-                </button>
-              </div>
             )}
             <div className="my-4 mx-6">
               <StarRating bookId={params.id} userRating={book.userRating} setBook={setBook} />
