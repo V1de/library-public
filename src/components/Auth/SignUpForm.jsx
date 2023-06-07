@@ -1,30 +1,36 @@
 import React from 'react';
 import { GrClose } from 'react-icons/gr';
-import ApiService from '../../helpers/api-helpers';
 import { toast } from 'react-toastify';
-const authApi = new ApiService('auth/login');
+import ApiService from '../../helpers/api-helpers';
+const usersApi = new ApiService('users/register');
 
-const SignInForm = ({ handleClose, setIsRegistered }) => {
+const SignUpForm = ({ handleClose, setIsRegistered }) => {
   const onSubmit = (e) => {
     e.preventDefault();
-    authApi
-      .createItem({ username: e.target.email.value, password: e.target.password.value })
-      .then((res) => {
-        localStorage.setItem('token', 'Bearer ' + res.token);
-        handleClose();
-        window.location.reload();
+    usersApi
+      .createItem({ username: e.target.username.value, email: e.target.email.value, password: e.target.password.value })
+      .then(() => {
+        toast.success('You successfully registered. Follow next steps on your email!');
+        setIsRegistered(true);
       })
-      .catch(() => toast.error('Invalid credentials'));
+      .catch();
   };
 
   return (
     <div className="w-full">
       <div className="flex w-[220px] sm:w-[350px] justify-between mb-4 font-bold text-lg underline">
-        <div>Authorization</div>
+        <div>Registration</div>
         <GrClose onClick={() => handleClose()} size={20} className="cursor-pointer" />
       </div>
       <form onSubmit={onSubmit}>
         <div className="grid font-semibold">
+          <label>Username</label>
+          <input
+            type="text"
+            name="username"
+            required
+            className="mb-2 py-1 px-2 font-normal border-2 border-gray-300 rounded-lg"
+          />
           <label>Email</label>
           <input
             type="text"
@@ -43,18 +49,18 @@ const SignInForm = ({ handleClose, setIsRegistered }) => {
         <div className="w-full">
           <input
             type="submit"
-            value="Authorize"
-            className="w-full bg-green-300 mx-auto my-4 py-1 font-semibold border-2 border-green-400 rounded-lg cursor-pointer"
+            value="Sign up"
+            className="w-full bg-blue-200 mx-auto my-4 py-1 font-semibold border-2 border-blue-300 rounded-lg cursor-pointer"
           />
         </div>
       </form>
       <div className="text-end">
-        <div onClick={() => setIsRegistered(false)} className="underline cursor-pointer">
-          Sign up
-        </div>
+        <a onClick={() => setIsRegistered(true)} className="underline">
+          Already registered?
+        </a>
       </div>
     </div>
   );
 };
 
-export default SignInForm;
+export default SignUpForm;

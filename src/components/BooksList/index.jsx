@@ -6,7 +6,11 @@ const BooksList = ({ title, books }) => {
     <div className="px-5">
       <h2 className="flex font-bold text-gray-500 text-xl pb-2">{title}</h2>
       <div className="flex flex-wrap justify-center sm:justify-between px-auto md:px-14 xl:px-2 2xl:px-12 sm:px-5 border border-2 rounded rounded-lg">
-        {books && books.map((book) => <BookCard key={book.id} book={book} />)}
+        {books && books.length > 0 ? (
+          books.map((book) => <BookCard key={book.id} book={book} />)
+        ) : (
+          <div className="w-full text-2xl text-center py-2">No books found</div>
+        )}
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ const Main = () => {
 
   useEffect(() => {
     const payload = {
-      include: 'genres,authors,ratings',
+      include: 'genres,authors,ratings,attachments,files',
       count: 6,
       sortField: 'id',
       sortDirection: 'asc',

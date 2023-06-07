@@ -3,15 +3,14 @@ import { AiFillStar } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import { getResourceFromApi, methods } from '../../helpers/api-helpers';
 
-const StarRating = ({ bookId, userRating, setBook }) => {
+const StarRating = ({ bookId, userRating }) => {
   const [rating, setRating] = useState(userRating ? userRating.rating : null);
   const rateBook = ({ id, ...other }) =>
     getResourceFromApi('books/:id/rate'.replace(':id', id), null, methods.patch, other);
 
   const onClick = (e, newRating) => {
     e.preventDefault();
-    rateBook({ id: bookId, rating: newRating }).then((res) => {
-      setBook(res);
+    rateBook({ id: bookId, rating: newRating }).then(() => {
       setRating(newRating);
       toast.success('Rating has been updated!');
     });

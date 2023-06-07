@@ -16,23 +16,24 @@ const Books = () => {
   const [chosenGenres, setChosenGenres] = useState([]);
   const [chosenAuthors, setChosenAuthors] = useState([]);
   const [chosenRatings, setChosenRatings] = useState([]);
+  const [searchText, setSearchText] = useState(null);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   useEffect(() => {
     genresApi
       .getAllItems({ sortField: 'title', sortDirection: 'asc' })
       .then((res) => setGenres(res.rows))
-      .catch((err) => {});
+      .catch(() => {});
 
     authorsApi
       .getAllItems({ sortField: 'firstName', sortDirection: 'asc' })
       .then((res) => setAuthors(res.rows))
-      .catch((err) => {});
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
     const query = {
-      include: 'ratings,authors,genres'
+      include: 'ratings,authors,genres,attachments'
     };
 
     if (chosenGenres.length > 0) {
@@ -44,13 +45,17 @@ const Books = () => {
     if (chosenAuthors.length > 0) {
       query.authors = chosenAuthors.join(',');
     }
+    if (searchText && searchText.length > 0) {
+      query.search = searchText;
+      query.searchKeys = 'title';
+    }
 
     booksApi
       .getAllItems(query)
       .then((res) => {
         setBooks(res.rows);
       })
-      .catch((err) => {});
+      .catch(() => {});
   }, [isFiltersApplied]);
 
   const manageCheckbox = (e, array, setArray) => {
@@ -67,6 +72,10 @@ const Books = () => {
   const onClick = () => {
     setIsFiltersApplied(!isFiltersApplied);
     setIsFiltersOpen(false);
+  };
+
+  const onSearchChange = (e) => {
+    setSearchText(e.target.value);
   };
 
   return (
@@ -87,6 +96,13 @@ const Books = () => {
               </div>
             </div>
             <div className="px-2 pb-2 border-2 border-gray-300 rounded-xl">
+              <div className="py-1 font-semibold">Search</div>
+              <input
+                type="text"
+                name="search"
+                onChange={onSearchChange}
+                className="w-full px-2 border-2 border-gray-600 rounded-lg"
+              />
               <div className="py-1 font-semibold">Genres</div>
               <ul className="px-1">
                 {genres &&

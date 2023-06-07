@@ -22,10 +22,10 @@ const SignInButton = ({ closeNav }) => {
   return user ? (
     <div
       onClick={onProfileClick}
-      className="flex justify-center items-center px-3 border-2 rounded-2xl border-gray-500 shadow cursor-pointer"
+      className="flex justify-center items-center px-3 border-2 rounded-2xl border-orange-400 shadow cursor-pointer"
     >
       <div className="pr-3 text-lg">{user.username}</div>
-      <FaUserCircle size={20} />
+      <FaUserCircle size={20} color="gray" />
     </div>
   ) : (
     <>

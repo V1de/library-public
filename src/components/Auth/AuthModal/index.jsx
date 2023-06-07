@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SignInForm from '../SignInForm';
+import SignUpForm from '../SignUpForm';
 
 const AuthModal = ({ onClose }) => {
+  const [isRegistered, setIsRegistered] = useState(true);
+
   return (
     <div
       onClick={onClose}
@@ -9,7 +12,11 @@ const AuthModal = ({ onClose }) => {
     >
       <div className="inline-block align-middle text-left text-base">
         <div onClick={(e) => e.stopPropagation()} className="p-4 border-white border-2 rounded-2xl bg-white">
-          <SignInForm handleClose={onClose} />
+          {isRegistered ? (
+            <SignInForm handleClose={onClose} setIsRegistered={setIsRegistered} />
+          ) : (
+            <SignUpForm handleClose={onClose} setIsRegistered={setIsRegistered} />
+          )}
         </div>
       </div>
     </div>
