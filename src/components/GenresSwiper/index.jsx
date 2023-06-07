@@ -18,7 +18,7 @@ const GenresSwiper = () => {
   useEffect(() => {
     genresApi
       .getAllItems({
-        limit: 10,
+        count: 10,
         include: 'attachments'
       })
       .then((res) => {
