@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ApiService from '../../helpers/api-helpers';
 import StarRating from '../../components/common/StarRating';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import { toast } from 'react-toastify';
@@ -17,8 +17,6 @@ const BookPage = () => {
   const [isRead, setIsRead] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isCollectionsModalOpen, setIsCollectionsModalOpen] = useState(false);
-  const navigate = useNavigate();
 
   const onReadButtonClick = () => {
     const token = localStorage.getItem('token');
@@ -70,10 +68,6 @@ const BookPage = () => {
     }
   };
 
-  const onOpenCollectionsClick = () => {
-    setIsCollectionsModalOpen(true);
-  };
-
   useEffect(() => {
     const payload = {
       include: 'genres,authors,ratings,attachments,files'
@@ -117,9 +111,9 @@ const BookPage = () => {
                 <button onClick={onAddToLikedClick} className="w-full rounded-t-lg hover:bg-gray-300">
                   {isLiked ? 'Remove from liked' : 'Add to liked'}
                 </button>
-                <button onClick={onOpenCollectionsClick} className="w-full rounded-b-lg hover:bg-gray-300">
-                  Add to collection
-                </button>
+                {/*<button onClick={onOpenCollectionsClick} className="w-full rounded-b-lg hover:bg-gray-300">*/}
+                {/*  Add to collection*/}
+                {/*</button>*/}
               </div>
             )}
             {book && book.file?.storageKey && (
@@ -153,7 +147,7 @@ const BookPage = () => {
             <div className="py-1 lg:py-4 text-lg sm:text-xl">{book.description}</div>
             <div className="text-base break-all sm:text-lg">
               Genre:
-              <a href={`/genres/${book.genre?.id}`} className="pl-2 underline">
+              <a href={`/books?genres=${book.genre?.id}`} className="pl-2 underline">
                 {book.genre?.title}
               </a>
             </div>

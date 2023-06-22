@@ -4,19 +4,27 @@ import { AiOutlineMenuUnfold } from 'react-icons/ai';
 import { GiBookshelf } from 'react-icons/gi';
 import { FaBookReader, FaUsers } from 'react-icons/fa';
 import { RiFileList2Fill, RiLogoutBoxRFill } from 'react-icons/ri';
-import Card from './Card';
-import ApiService from '../../helpers/api-helpers';
 import { useNavigate } from 'react-router-dom';
+import Collections from './Collections';
+import Preferences from './Preferences';
+import Friends from './Friends';
+import ApiService from '../../helpers/api-helpers';
 const likedBooksApi = new ApiService('books/liked');
 const readBooksApi = new ApiService('books/read');
 const pagesApi = new ApiService('books/pages/read');
+const collectionsApi = new ApiService('collections');
+const friendsApi = new ApiService('users/friends/list');
 
 const Profile = () => {
   const [likedBooks, setLikedBooks] = useState([]);
   const [readBooks, setReadBooks] = useState([]);
   const [readBooksNumber, setReadBooksNumber] = useState(0);
+  const [collectionsNumber, setCollectionsNumber] = useState(0);
+  const [friendsNumber, setFriendsNumber] = useState(0);
   const [pagesRead, setPagesRead] = useState(0);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
+  const [isFriendsOpen, setIsFriendsOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,7 +47,34 @@ const Profile = () => {
         setPagesRead(res.pagesRead);
       })
       .catch();
+    collectionsApi
+      .getAllItems()
+      .then((res) => {
+        setCollectionsNumber(res.count);
+      })
+      .catch();
+    friendsApi
+      .getAllItems()
+      .then((res) => {
+        setFriendsNumber(res.length);
+      })
+      .catch();
   }, []);
+
+  const onMyStatsClick = () => {
+    setIsFriendsOpen(false);
+    setIsCollectionsOpen(false);
+  };
+
+  const onFriendsClick = () => {
+    setIsCollectionsOpen(false);
+    setIsFriendsOpen(true);
+  };
+
+  const onCollectionsClick = () => {
+    setIsFriendsOpen(false);
+    setIsCollectionsOpen(true);
+  };
 
   const onLogoutClick = () => {
     localStorage.removeItem('token');
@@ -57,7 +92,9 @@ const Profile = () => {
             } transition-transform`}
           >
             <div className="flex justify-between items-center">
-              <h2 className="flex font-bold text-gray-500 text-xl pb-2 pl-2">My Stats</h2>
+              <button onClick={onMyStatsClick}>
+                <h2 className="flex font-bold text-gray-500 text-xl pb-2 pl-2">My Stats</h2>
+              </button>
               <div className="xl:hidden px-5">
                 <button onClick={() => setIsFiltersOpen(false)}>
                   <GrClose />
@@ -77,13 +114,17 @@ const Profile = () => {
               </div>
               <div className="flex py-1 cursor-pointer">
                 <GiBookshelf size={24} />
-                <div className="w-full pl-2 underline">Collections</div>
-                <div className="px-2">1</div>
+                <div onClick={onCollectionsClick} className="w-full pl-2 underline">
+                  Collections
+                </div>
+                <div className="px-2">{collectionsNumber}</div>
               </div>
               <div className="flex py-1 cursor-pointer">
                 <FaUsers size={24} />
-                <div className="w-full pl-2 underline">Friends</div>
-                <div className="px-2">1</div>
+                <div onClick={onFriendsClick} className="w-full pl-2 underline">
+                  Friends
+                </div>
+                <div className="px-2">{friendsNumber}</div>
               </div>
             </div>
             <div
@@ -101,25 +142,13 @@ const Profile = () => {
               <AiOutlineMenuUnfold size={20} />
             </button>
           </div>
-          <div className="px-5">
-            <h2 className="flex font-bold text-gray-500 text-xl pb-2">Liked books</h2>
-            <div className="flex flex-col max-h-[350px] overflow-y-scroll scroll py-2 px-2 border border-2 border-gray-300 rounded rounded-lg">
-              {likedBooks && likedBooks.length > 0 ? (
-                likedBooks.map((book) => <Card key={book.id} book={book} />)
-              ) : (
-                <div className="w-full text-2xl text-center py-2">No books found</div>
-              )}
-            </div>
-
-            <h2 className="flex font-bold text-gray-500 text-xl pt-6 pb-2">Read books</h2>
-            <div className="flex flex-col max-h-[350px] overflow-y-scroll scroll py-2 px-2 border border-2 border-gray-300 rounded rounded-lg">
-              {readBooks && readBooks.length > 0 ? (
-                readBooks.map((book) => <Card key={book.id} book={book} />)
-              ) : (
-                <div className="w-full text-2xl text-center py-2">No books found</div>
-              )}
-            </div>
-          </div>
+          {isFriendsOpen ? (
+            <Friends />
+          ) : isCollectionsOpen ? (
+            <Collections />
+          ) : (
+            <Preferences likedBooks={likedBooks} readBooks={readBooks} />
+          )}
         </div>
       </div>
     </div>

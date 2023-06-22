@@ -4,6 +4,7 @@ import ApiService from '../../helpers/api-helpers';
 import { AiFillStar, AiOutlineLeftCircle, AiOutlineRightCircle } from 'react-icons/ai';
 import { GrClose } from 'react-icons/gr';
 import { BsFilterSquare } from 'react-icons/bs';
+import { useQueryParam, StringParam } from 'use-query-params';
 const genresApi = new ApiService('books/genres');
 const authorsApi = new ApiService('books/authors');
 const booksApi = new ApiService('books');
@@ -20,11 +21,14 @@ const Books = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
+  const [genresParam, setGenresParam] = useQueryParam('genres', StringParam);
 
   useEffect(() => {
     genresApi
       .getAllItems({ sortField: 'title', sortDirection: 'asc' })
-      .then((res) => setGenres(res.rows))
+      .then((res) => {
+        setGenres(res.rows);
+      })
       .catch(() => {});
 
     authorsApi
@@ -40,8 +44,8 @@ const Books = () => {
       count: 6
     };
 
-    if (chosenGenres.length > 0) {
-      query.genres = chosenGenres.join(',');
+    if (genresParam && genresParam.length > 0) {
+      query.genres = genresParam;
     }
     if (chosenRatings.length > 0) {
       query.ratings = chosenRatings.join(',');
@@ -74,7 +78,23 @@ const Books = () => {
     }
   };
 
+  const manageGenresCheckbox = (e) => {
+    const genresArray = genresParam && genresParam.length > 0 ? genresParam.split(',') : [];
+    const newArray = genresArray;
+    if (genresArray.includes(e.target.id.toString())) {
+      newArray.splice(genresArray.indexOf(e.target.id.toString()), 1);
+      setGenresParam(newArray.join(','));
+    } else {
+      newArray.push(e.target.id.toString());
+      setGenresParam(newArray.join(','));
+    }
+  };
+
   const onClick = () => {
+    if (chosenGenres && chosenGenres.length > 0) {
+      setGenresParam(chosenGenres.join(','));
+    }
+    setPage(1);
     setIsFiltersApplied(!isFiltersApplied);
     setIsFiltersOpen(false);
   };
@@ -126,8 +146,13 @@ const Books = () => {
                   genres.map((genre) => (
                     <li key={genre.id}>
                       <input
-                        onClick={(e) => manageCheckbox(e, chosenGenres, setChosenGenres)}
+                        onClick={(e) => manageGenresCheckbox(e)}
                         type="checkbox"
+                        checked={
+                          genresParam && genresParam.length > 0
+                            ? genresParam.split(',').includes(genre.id.toString())
+                            : false
+                        }
                         id={genre.id}
                         className="mr-2"
                       />

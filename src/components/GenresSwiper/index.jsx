@@ -48,7 +48,7 @@ const GenresSwiper = () => {
           className="mySwiper"
         >
           {genres.map((genre) => (
-            <SwiperSlide onClick={() => navigate(`/genres/${genre.id}`)}>
+            <SwiperSlide onClick={() => navigate(`/books?genres=${genre.id}`)}>
               <img src={`http://localhost/uploads/${genre.attachment.storageKey}`} alt={genre.attachment.filename} />
             </SwiperSlide>
           ))}

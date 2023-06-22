@@ -3,6 +3,8 @@ import Layout from './components/Layout';
 import React, { useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { UserContext } from './UserContext';
+import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
+import { QueryParamProvider } from 'use-query-params';
 import Main from './pages/Main';
 import BookPage from './pages/BookPage';
 import Books from './pages/Books';
@@ -30,18 +32,20 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <UserContext.Provider value={{ user, setUser }}>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Main />} />
-              <Route path="/books" element={<Books />} />
-              <Route path="/books/:id" element={<BookPage />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/help" element={<HelpAndSupport />} />
-            </Routes>
-          </Layout>
-        </UserContext.Provider>
+        <QueryParamProvider adapter={ReactRouter6Adapter}>
+          <UserContext.Provider value={{ user, setUser }}>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Main />} />
+                <Route path="/books" element={<Books />} />
+                <Route path="/books/:id" element={<BookPage />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/help" element={<HelpAndSupport />} />
+              </Routes>
+            </Layout>
+          </UserContext.Provider>
+        </QueryParamProvider>
       </BrowserRouter>
       <ToastContainer position="top-right" autoClose={3000} closeOnClick pauseOnHover theme="light" />
     </div>

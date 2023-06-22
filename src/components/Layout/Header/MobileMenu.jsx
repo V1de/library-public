@@ -18,13 +18,13 @@ const MobileMenu = ({ nav }) => {
             </Link>
           </li>
           <li className="py-2 border-b border-b-gray-500">
-            <Link onClick={nav.handleNav} to="/books">
-              Books
+            <Link onClick={nav.handleNav} to="/">
+              Home
             </Link>
           </li>
           <li className="py-2 border-b border-b-gray-500">
-            <Link onClick={nav.handleNav} to="/categories">
-              Categories
+            <Link onClick={nav.handleNav} to="/books">
+              Books
             </Link>
           </li>
           <li className="py-2 border-b border-b-gray-500">

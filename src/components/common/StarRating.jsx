@@ -10,10 +10,14 @@ const StarRating = ({ bookId, userRating }) => {
 
   const onClick = (e, newRating) => {
     e.preventDefault();
-    rateBook({ id: bookId, rating: newRating }).then(() => {
-      setRating(newRating);
-      toast.success('Rating has been updated!');
-    });
+    rateBook({ id: bookId, rating: newRating })
+      .then(() => {
+        setRating(newRating);
+        toast.success('Rating has been updated!');
+      })
+      .catch((err) => {
+        return;
+      });
   };
 
   return (

@@ -11,6 +11,7 @@ const SignInButton = ({ closeNav }) => {
   const navigate = useNavigate();
 
   const onOpenAuthModalClick = () => {
+    closeNav();
     setIsAuthShown(true);
   };
 

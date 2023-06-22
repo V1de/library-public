@@ -1,10 +1,10 @@
 import React from 'react';
 import { AiFillStar } from 'react-icons/ai';
 
-const Card = ({ book }) => {
+const Card = ({ children, book }) => {
   return (
     <div className="flex flex-col justify-center h-[90%] my-2">
-      <div className="relative flex w-full flex-row h-[150px] space-x-5 space-y-0 rounded-xl shadow-xl p-3 mx-auto border border-2 bg-white">
+      <div className="relative flex w-full flex-row h-[150px] space-x-5 space-y-0 rounded-xl shadow-xl p-3 mx-auto border border-2 bg-white overflow-y-scroll">
         <div className="bg-white grid place-items-center">
           <img src={`http://localhost/uploads/${book.attachment.storageKey}`} alt="" className="h-28 w-24 rounded-xl" />
         </div>
@@ -31,8 +31,10 @@ const Card = ({ book }) => {
             <p className="font-bold text-gray-800 text-base">
               Genre: <span className="font-normal text-gray-600 text-base">{book.genre?.title}</span>
             </p>
+            <div className="sm:hidden">{children}</div>
           </div>
         </div>
+        <div className="hidden sm:flex">{children}</div>
       </div>
     </div>
   );
